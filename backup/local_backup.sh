@@ -33,7 +33,7 @@ fi
 # init
 x=$(date +"%y-%m-%d")
 backup_file_ext='sql'
-mongodb_backup_file_ext='tar.gz'
+mongodb_backup_file_ext='mongo.gz'
 
 backup_dir="${backup_dir}${x}/"
 
