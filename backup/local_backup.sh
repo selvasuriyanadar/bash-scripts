@@ -30,11 +30,6 @@ if [[ -z "$mongodb_backup_file_prefix" ]]; then
   exit 1
 fi
 
-if [[ -z "$mongodb_backup_temp_dir" ]]; then
-  echo "mongodb_backup_temp_dir is required."
-  exit 1
-fi
-
 # init
 x=$(date +"%y-%m-%d")
 backup_file_ext='sql'
@@ -46,12 +41,10 @@ backup_file_name="${backup_file_prefix}-${x}.${backup_file_ext}"
 mongodb_backup_file_name="${mongodb_backup_file_prefix}-${x}.${mongodb_backup_file_ext}"
 local_file="${backup_dir}${backup_file_name}"
 mongodb_local_file="${backup_dir}${mongodb_backup_file_name}"
-mongodb_backup_temp_dir="${backup_dir}${mongodb_backup_temp_dir}"
 
 # creating directory
 mkdir $backup_dir
 
 # creating backup
 pg_dump --dbname=$conn > $local_file
-mongodump -u $mongodump_username -p $mongodump_password $mongodb_backup_temp_dir
-tar -czf $mongodb_local_file $mongodb_backup_temp_dir --remove-files
+mongodump --archive=$mongodb_local_file --gzip $mongo_conn
