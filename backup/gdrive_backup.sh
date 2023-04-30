@@ -15,6 +15,11 @@ if [[ -z "$conn" ]]; then
   exit 1
 fi
 
+if [[ -z "$mongo_conn" ]]; then
+  echo "mongo_conn is required."
+  exit 1
+fi
+
 if [[ -z "$mongodump_username" ]]; then
   echo "mongodump_username is required."
   exit 1
