@@ -1,5 +1,14 @@
 #!/bin/sh
 
+if [[ -z "$type" ]]; then
+  echo "type is required."
+  exit 1
+fi
+if [ ! "dev" == "$type" ] && [ ! "live" == "$type" ] && [ ! "old_dev" == "$type" ]; then
+  echo "type is invalid."
+  exit 1
+fi
+
 if [[ -z "$dev_ssh_key" ]]; then
   echo "dev_ssh_key is required."
   exit 1
