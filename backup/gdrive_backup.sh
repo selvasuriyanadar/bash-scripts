@@ -20,16 +20,6 @@ if [[ -z "$mongo_conn" ]]; then
   exit 1
 fi
 
-if [[ -z "$mongodump_username" ]]; then
-  echo "mongodump_username is required."
-  exit 1
-fi
-
-if [[ -z "$mongodump_password" ]]; then
-  echo "mongodump_password is required."
-  exit 1
-fi
-
 if [[ -z "$backup_file_prefix" ]]; then
   echo "backup_file_prefix is required."
   exit 1
@@ -71,7 +61,7 @@ pg_dump --dbname=$conn > $local_file
 mongodump --archive=$mongodb_local_file --gzip $mongo_conn
 
 # pushing backup to drive
-drive push -no-prompt $drive_file
+drive push -no-prompt $drive_file $mongodb_drive_file
 
 # clearing local file
 rm -r $backup_local_dir

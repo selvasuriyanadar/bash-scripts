@@ -8,7 +8,7 @@ if [[ -z "$type" ]]; then
   echo "type is required."
   exit 1
 fi
-if [ ! "booma"  == "$src_type" ] && [ ! "plcampus"  == "$src_type" ] && [ ! "plcampusfrontend"  == "$src_type" ]; then
+if [ ! "booma"  == "$src_type" ] && [ ! "plcampus"  == "$src_type" ] && [ ! "plcampusfrontend"  == "$src_type" ] && [ ! "cloudconfig"  == "$src_type" ]; then
   echo "src type is invalid."
   exit 1
 fi
@@ -134,6 +134,45 @@ if [ "plcampusfrontend" == "$src_type" ]; then
   target_jar=$plcampusfrontend_target_jar
 fi
 
+if [[ -z "$cloudconfig_src_root" ]]; then
+  echo "cloudconfig_src_root is required."
+  exit 1
+fi
+if [[ -z "$cloudconfig_target_jar" ]]; then
+  echo "cloudconfig_target_jar is required."
+  exit 1
+fi
+if [[ -z "$cloudconfig_dev_deploy_dir" ]]; then
+  echo "cloudconfig_dev_deploy_dir is required."
+  exit 1
+fi
+if [[ -z "$cloudconfig_dev_deploy_user" ]]; then
+  echo "cloudconfig_dev_deploy_user is required."
+  exit 1
+fi
+if [[ -z "$cloudconfig_live_deploy_dir" ]]; then
+  echo "cloudconfig_live_deploy_dir is required."
+  exit 1
+fi
+if [[ -z "$cloudconfig_live_deploy_user" ]]; then
+  echo "cloudconfig_live_deploy_user is required."
+  exit 1
+fi
+
+#cloudconfig
+if [ "cloudconfig" == "$src_type" ]; then
+  if [ "dev" == "$type" ]; then
+    deploy_dir=$cloudconfig_dev_deploy_dir
+    deploy_user=$cloudconfig_dev_deploy_user
+  fi
+  if [ "live" == "$type" ]; then
+    deploy_dir=$cloudconfig_live_deploy_dir
+    deploy_user=$cloudconfig_live_deploy_user
+  fi
+  src_root=$cloudconfig_src_root
+  target_jar=$cloudconfig_target_jar
+fi
+
 if [[ -z "$dev_ssh_key" ]]; then
   echo "dev_ssh_key is required."
   exit 1
@@ -185,6 +224,9 @@ deploy_script="bash ${deploy_dir}restart.sh"
 
 # packaging
 cd "$src_root"
+if test -f "set-java-home.sh"; then
+  source "set-java-home.sh"
+fi
 mvn clean
 mvn package
 
